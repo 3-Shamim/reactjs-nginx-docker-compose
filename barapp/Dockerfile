@@ -5,7 +5,8 @@
 # these are what will be served by nginx
 # use alias build to be easier to refer this container elsewhere
 # e.g inside nginx container
-FROM node:alpine as build
+
+FROM node:12.8.1-alpine as build
 
 # set working directory
 # this is the working folder in the container
@@ -17,6 +18,16 @@ COPY . ./
 
 # add the node_modules folder to $PATH
 # ENV PATH /app/node_modules/.bin:$PATH
+
+# --no-cache: download package index on-the-fly, no need to cleanup afterwards
+# --virtual: bundle packages, remove whole bundle at once, when done. This is for alpine version
+
+# RUN apk --no-cache --virtual build-dependencies add \
+#     python \
+#     make \
+#     g++ \
+#     && npm install \
+#     && apk del build-dependencies
 
 # install and cache dependencies
 RUN npm install
